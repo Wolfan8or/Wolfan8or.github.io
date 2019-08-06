@@ -1,0 +1,545 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+   
+    <link href="https://fonts.googleapis.com/css?family=Overpass:400,400i,700,700i,900,900i&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+
+  <div class="card-builder">
+
+    <form class="builder">
+
+      <input type="text" placeholder="Search Souncloud" class="">
+      <br>
+      Or enter your track information manually.
+
+      <!--
+      7/30/19
+      Image upload still needs work. Some elements were messed with.
+
+      Check JavaScript again. attempted to use input type with file instead of text straight into old JavaScript -->
+
+      <input type="text" id="trackIn" value="" placeholder="Track Name">
+      <input type="text" id="userIn" value="" placeholder="Artist">
+      
+      <input type="text" id="avatarInElse" value="" placeholder="Profile Photo URL">
+      <input type="file" id="avatarIn">
+
+      <input type="text" id="artworkIn" value="" placeholder="Artwork URL">
+      <input type="file" id="filetag">
+      
+
+      <input type="text" id="genreIn" value="" placeholder="Genre">
+      <input type="date" id="dateIn" value="">
+      <input type="text" id="descriptionIn" placeholder="Description" class="">
+      <label for="base">Base Color</label>
+      <input id="base1" type="color" name="base1" value="#ffffff">
+      <input id="base2" type="color" name="base2" value="#ffffff">
+      <label for="font">Font Color</label>
+      <input id="fontcolor" type="color" name="fontcolor" value="#000000">
+      <label for="border">Border Color</label>
+      <input id="border" type="color" name="border" value="#000000">
+      <input type="number" id="bpmIn" value="" placeholder="120">
+     
+     <!--Make this a dropdown menu-->
+      <input type="text" id="keyIn" value="" placeholder="key">
+      
+      <!--QR Code--->
+
+      <label for="qrcodeIn">QR Code URL</label>
+      <input type="text" id="qrcodeIn" value="" placeholder="Soundcloud URL" name="qrcode">
+        <div id="qrcode"></div>
+      
+
+
+      <!--
+      <input type="file" accept="image/*" name="artwork" id="artworkIn" onchange="loadFile(event)" style="display: none;">
+      <label for="artworkIn" style="cursor: pointer;">Upload Image</label>
+      <img id="artworkOut" width="200">
+      -->
+
+      <button type="button" onclick="getValue()">Create Card</button>
+
+    </form>
+    <!--
+    Example entries
+    Avatar URL: https://i1.sndcdn.com/avatars-000383918738-dgvgmc-t500x500.jpg
+    Cover Art URL: https://i1.sndcdn.com/artworks-000558147867-l5e3m2-t500x500.jpg
+    -->
+
+  <!--_______________________________________________ -->
+
+    <!-- The Card (id="content" is for print PDF function-->
+    <article class="card" id="content">
+
+    <!--Card Header: Track Name, Avatar, Artist/User, Fire Rating-->
+      <header class=cardHeader>
+
+        <div class="headerBar1">
+          <div id="trackOut" class="track" >
+            Track Title
+         </div>
+          <div class="user" id="userOut">
+            Artist Name
+          </div>
+          <div class="avatar">
+            <img src="https://i1.sndcdn.com/avatars-000383918738-dgvgmc-t500x500.jpg" id="avatarOut">
+          </div>
+        </div>
+
+        
+        
+          <!--
+          <div class="fireRating">
+            <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/256x256/flame.png">
+          </div>
+          --->
+        
+
+      </header>
+
+<!--Card Body: Artwork, Information, Stats-->
+
+    <div class="cardBody">
+
+      <div class="artwork" id="artworkOut">
+        <img src="https://i1.sndcdn.com/artworks-000558147867-l5e3m2-t500x500.jpg" id="preview">
+      <!-- placeholder  <iframe width="100%" height="600" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/390310020&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
+       -->
+  
+      </div>
+
+      <div class="bodyFooter">
+
+        <div class="genre" id="genreOut">
+        <!--Genre-->
+        #Genre
+        </div>
+        <div class="releaseDate" id="dateOut">
+        Released: MM - DD - YYYY
+        </div>
+
+      </div>
+  </div>
+
+<!--cardFooter - Genre, Description-->
+
+    <div class="cardFooter">
+
+      <div class="information">
+
+        <div class="description" id="descriptionOut">
+          <!--Description-->
+          Enter a description here...
+        </div>
+
+      </div>
+
+      <footer class="stats">
+        <!--Stats-->
+        <div class="bpm">
+          <strong>BPM</strong> <a id="bpmOut">113</a>
+        </div>
+        <div class="key">
+          <strong>KEY</strong> <a id="keyOut">C</a>
+        </div>
+      
+
+      </footer>
+    </article>
+
+    <div id="editor"></div>
+    <button id="cmd">generate PDF</button>
+</div>    
+<!--_______________________________________________ -->
+
+<!-- CSS --->
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-family: 'Overpass', sans-serif;
+  background-color: #ffffff;
+}
+
+:root {
+  --base1: #ffffff;
+  --base2: #ffffff;
+  --border: #000000;
+  --fontcolor: #000000;
+}
+
+.card-builder {
+display:grid;
+grid-template-columns: 1fr 2fr;
+}
+
+.builder {
+margin:auto;
+max-width: 240px;
+padding: 24rem;
+display:grid;
+grid-gap:1em;
+grid-auto-rows: 3.2rem;
+justify-items: center;
+padding:20px;
+background-color: #999;
+}
+
+.builder button {
+  background-color: #ff5500;
+  border-radius:20px;
+  border-color:#fff;
+  color: #fff;
+  font-size: 24px;
+  font-weight:
+  padding: 0 10px;
+}
+
+.card {
+max-width: 720px;
+max-height: 1054px;
+width: 100%;
+height: auto;
+margin: 20px auto;
+background-image: linear-gradient(45deg, var(--base1), var(--base2));
+padding: 50px 0px 50px 0px;
+border-style: solid;
+border-radius:10px;
+border-width: 14px;
+border-color: var(--border);
+color: var(--fontcolor);
+}
+
+.cardHeader {
+
+margin: auto;
+width: 80%;
+padding: 5px;
+/*
+box-shadow:
+inset 0 -20px 10px rgba(0,0,0,0.5), /*bottom internal shadow*/
+/*inset 0 10px 10px rgba(255,255,255,.5); */ /*top internal highlight*/
+
+
+
+}
+
+.headerBar1 {
+display:grid;
+grid-template-columns: 2fr 1fr;
+grid-template-rows: 1fr 1fr;
+
+
+align-items: center;
+justify-content: space-between;
+}
+
+/*
+.song {
+display: flex;
+flex-direction: column;
+}
+*/
+
+.track {
+width: 85%;
+font-weight: 600;
+font-size: 3.6rem;
+line-height: 1;
+grid-column: 1;
+grid-row: 1 / 2;
+}
+
+.user {
+font-size: 3.0rem;  
+grid-column: 1;
+grid-row: 2 / 2;
+}
+
+.avatar {
+width: 100%;
+background-color:#fff;
+height:100px;
+border-radius:50%;
+width:100px;
+grid-column: 2;
+grid-area: 1 / col2-start / last-line / 2;
+justify-self: end;
+object-fit: contain;
+}
+
+.avatar img {
+width: 100%;
+height: auto;
+border-radius:50%;
+}
+
+/*
+.headerBar2 {
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+*/
+
+
+/*
+.fireRating img {
+width: 40px;
+height: 37px;
+}
+*/
+
+.cardBody {
+margin: 12px auto;
+display: flex;
+flex-direction: column;
+width: 70%;
+}
+
+.artwork {
+width: 100%;
+}
+
+.artwork img {
+width: 100%;
+}
+
+.artwork iframe {
+width: 100%;
+}
+
+.bodyFooter {
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+justify-content: space-between;
+padding-top: 6px
+}
+
+.releaseDate {
+text-align: right;
+font-weight: lighter;
+font-size: 24px;
+}
+
+.genre {
+background-color: var(--border);
+border-radius:20px;
+color: var(--fontcolor);
+font-size: 24px;
+font-weight: lighter;
+padding: 0 10px;
+}
+
+.cardFooter {
+margin: auto;
+display: flex;
+flex-direction: column;
+width: 80%;
+}
+
+.information {
+width: 100%;
+height: 160px;
+border-width: 2px;
+border-top-style: solid;
+border-top-color: #ccd4cc;
+border-bottom-style: solid;
+border-bottom-color: #ccd4cc;
+padding-top: 7px;
+padding-bottom: 7px;
+}
+
+.description {
+font-size: 24px;
+font-style: italic;
+}
+
+.stats {
+display:grid;
+grid-template-columns: 1fr 1fr 1fr 1fr;
+justify-items: right;
+padding: 2px;
+font-size: 30px;
+}
+
+
+.bpm {
+  grid-column: 3;
+  grid-row: 1 / 2;
+}
+
+.key {
+  grid-column: 4;
+  grid-row: 1 / 2;
+}
+/*
+.playbackCount {
+float: left;
+padding: 2px;
+}
+
+.likes {
+float: left;
+padding: 2px;
+}
+
+.reposts {
+
+padding: 2px;
+}
+*/
+
+
+
+
+<!-- Javascript --->
+<script>
+
+//Avatar File Input/Output - 8/5/19 Not Working
+
+var avatarIn = document.getElementById("avatarIn");
+var avatarOut = document.getElementById("avatarOut");
+    
+  avatarIn.addEventListener("change", function() {
+  changeAvatar(this);
+});
+
+function changeAvatar(input) {
+  var reader;
+
+  if (input.files && input.files[0]) {
+    reader = new FileReader();
+
+    reader.onload = function(e) {
+      avatarOut.setAttribute('src', e.target.result);
+    }
+
+    reader.readAsDataURL(input.files[0]);
+  }
+} 
+
+//Artwork File Input/Output
+
+var fileTag = document.getElementById("filetag");
+var preview = document.getElementById("preview");
+    
+fileTag.addEventListener("change", function() {
+  changeImage(this);
+});
+
+function changeImage(input) {
+  var reader;
+
+  if (input.files && input.files[0]) {
+    reader = new FileReader();
+
+    reader.onload = function(e) {
+      preview.setAttribute('src', e.target.result);
+    }
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+
+// var fileTag = document.getElementById("avatarIn");
+//    preview = document.getElementById("avatarOut");
+
+//Base, Border, and Font Color Inputs/Outputs
+
+const inputs = document.querySelectorAll('.builder input');
+
+    function handleUpdate() {
+      const suffix = this.dataset || '';
+      document.documentElement.style.setProperty(`--${this.name}`, this.value);
+    }
+
+    inputs.forEach(input => input.addEventListener('change', handleUpdate));
+    inputs.forEach(input => input.addEventListener('mousemove', handleUpdate));
+
+//Text, Date, Numerical Inputs/Outputs
+
+function getValue() {
+  var trackIn = document.getElementById('trackIn').value;
+  var trackOut = document.getElementById('trackOut');
+  trackOut.innerHTML=trackIn;
+  
+  var c = document.getElementById('userIn').value;
+  var d = document.getElementById('userOut');
+  d.innerHTML=c;
+  /*
+  var e = document.getElementById('avatarIn').value;
+  var f = document.getElementById('avatarOut');
+  f.innerHTML= `<img src="${e}">`;
+  
+  var g = document.getElementById('artworkIn').value;
+  var h = document.getElementById('artworkOut');
+  h.innerHTML= `<img src="${g}">`;
+  */
+
+  var i = document.getElementById('genreIn').value;
+  var j = document.getElementById('genreOut');
+  j.innerHTML="#"+i;
+
+  var k = document.getElementById('dateIn').value;
+  var l = document.getElementById('dateOut');
+  l.innerHTML=`Released: ${k}`;
+
+  var m = document.getElementById('descriptionIn').value;
+  var n = document.getElementById('descriptionOut');
+  n.innerHTML=m;
+
+  var bpmIn = document.getElementById('bpmIn').value;
+  var bpmOut = document.getElementById('bpmOut');
+  bpmOut.innerHTML=bpmIn;
+
+  var keyIn = document.getElementById('keyIn').value;
+  var keyOut = document.getElementById('keyOut');
+  keyOut.innerHTML=keyIn;
+}
+
+//Print Function - 8/5/19 Doesn't work
+
+var doc = new jsPDF();
+var specialElementHandlers = {
+    '#editor': function (element, renderer) {
+        return true;
+    }
+};
+
+$('#cmd').click(function () {
+    doc.fromHTML($('#content').html(), 15, 15, {
+        'width': 170,
+            'elementHandlers': specialElementHandlers
+    });
+    doc.save('sample-file.pdf');
+});
+
+</script>
+
+<!--
+<script src="https://connect.soundcloud.com/sdk/sdk-3.3.2.js"></script>
+<script>
+  SC.initialize({
+    client_id: 'YOUR_CLIENT_ID',
+    redirect_uri: 'http://example.com/callback'
+  });
+
+  SC.get("/tracks", function (response) {
+    for (var i = 0; i < response.length; i++) {
+      $("ul").append("<li>" + response[i].title + "</li>");
+    }
+  });
+</script>
+--->
+
+  </body>
+</html>
