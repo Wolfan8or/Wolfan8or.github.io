@@ -67,8 +67,8 @@ box-shadow:
 inset 0 -20px 10px rgba(0,0,0,0.5), /*bottom internal shadow*/
 /*inset 0 10px 10px rgba(255,255,255,.5); */ /*top internal highlight*/
 border-width: 2px;
-border-top-style: solid;
-border-top-color: var(--border);
+/*border-top-style: solid;
+border-top-color: var(--border);*/
 border-bottom-style: solid;
 border-bottom-color: var(--border);
 padding-top: 7px;
