@@ -218,15 +218,15 @@ grid-template-columns: 1fr 1fr 1fr;
 justify-items: right;
 padding: .25em;
 font-size: 0.7em;
-border-radius:0 0 20px 20px;
 color:white;
 mix-blend-mode: multiply;
 background-color: var(--border);
 padding: 0 6px;
-
-
 align-items: center;
 justify-content: space-between;
+
+/* border-radius:0 0 20px 20px; */
+
 }
 
 
