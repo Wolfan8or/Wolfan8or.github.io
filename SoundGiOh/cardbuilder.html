@@ -4,6 +4,49 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Overpass:400,400i,700,700i,900,900i&display=swap" rel="stylesheet">
+    <script src="qrcode.js"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+    
+    <!--Not Working 9/23/19-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js" integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="html2canvas.js"></script>
+    <script>
+    
+    
+    
+    function genPDF() {
+      // var doc = new jsPDF()
+
+      // doc.text('Hello world!', 10, 10)
+      // doc.save('a4.pdf')
+
+      html2canvas($('.cardFront').get(0), {
+        onrendered: function(canvas) {
+          // var img = canvas.toDataURL();
+          var doc = new jsPDF();
+          // doc.addImage(img, 'PNG',20,20);
+          // doc.save('test.pdf');
+    //       var img = canvas.toDataURL()
+    // window.open(img);
+      doc.text('Hello world!', 10, 10)
+      doc.save('a4.pdf')
+    }
+      });
+    }
+
+//   html2canvas(document.getElementById("content"), {
+    //     onrendered: function (canvas) {
+    //       var img = canvas.toDataURL("image/png");
+    //       var doc = new jsPDF();
+    //       doc.addImage(img, 'JPEG',20,20);
+    //       doc.save('test.pdf');
+    //     }
+    //   });
+    </script>
+
   </head>
 
   <body>
@@ -40,19 +83,18 @@
       <input id="base1" type="color" name="base1" value="#ffffff">
       <input id="base2" type="color" name="base2" value="#ffffff">
       <label for="font">Font Color</label>
-      <input id="fontcolor" type="color" name="fontcolor" value="#000000">
+      <input id="fontcolor" type="color" name="fontcolor" value="">
       <label for="border">Border Color</label>
       <input id="border" type="color" name="border" value="#000000">
       <input type="number" id="bpmIn" value="" placeholder="BPM (120)">
      
      <!--Make this a dropdown menu-->
-      <input type="text" id="keyIn" value="" placeholder="Key (Cm)">
+      <input type="text" id="keyIn" value="" placeholder="Key (Am)">
+      
       
       <!--QR Code--->
-
-      <label for="qrcodeIn">QR Code URL</label>
-      <input type="text" id="qrcodeIn" value="" placeholder="Soundcloud URL" name="qrcode">
-        <div id="qrcode"></div>
+      <input id="qrCodeLink" type="text" value="http://soundcloud.com" style="width:80%" />
+      
       
 
 
@@ -62,7 +104,8 @@
       <img id="artworkOut" width="200">
       -->
 
-      <button type="button" onclick="getValue()">Create Card</button>
+      <button type="button" onclick="getValue(), makeCode()">Create Card</button>
+      <button type="button" onclick="genPDF()">Generate PDF</button>
 
     </form>
     <!--
@@ -74,11 +117,12 @@
   <!--_______________________________________________ -->
 
     <!-- The Card (id="content" is for print PDF function-->
-    <article class="card" id="content">
-
+    <article class="cardFront" id="content">
+    <div class="bleed">
+      <div class="safeArea">
+        <div class="cardContent">
     <!--Card Header: Track Name, Avatar, Artist/User, Fire Rating-->
       <header class=cardHeader>
-
         <div class="headerBar1">
           <div id="trackOut" class="track" >
             Track Title
@@ -90,81 +134,66 @@
             <img src="images/Avatar-Placeholder-200x200.png" id="avatarOut">
           </div>
         </div>
-
-        
-        
-          <!--
-          <div class="fireRating">
-            <img src="https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/256x256/flame.png">
-          </div>
-          --->
-        
-
       </header>
 
 <!--Card Body: Artwork, Information, Stats-->
 
     <div class="cardBody">
-
       <div class="artwork" id="artworkOut">
         <img src="images/Artwork-Placeholder-500x500.png" id="preview">
-      <!-- placeholder  <iframe width="100%" height="600" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/390310020&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true"></iframe>
-       -->
       </div>    
         <div class="releaseDate" id="dateOut">
         Released: MM - DD - YYYY
         </div>
-  </div>
+    </div>
 
 <!--cardFooter - Description, Stats-->
-
     <div class="cardFooter">
-
       <div class="information">
-
         <div class="description" id="descriptionOut">
           <!--Description-->
           Enter a description here...
         </div>
-
       </div>
-
       <footer class="stats">
         <!--Stats-->
-
         <div class="genre">
           <div class="genreTag" id="genreOut">
-          <!--Genre-->
           #Genre
           </div>
-          </div>
-
+        </div>
         <div class="bpm">
-          <strong>BPM</strong> <a id="bpmOut">113</a>
+          <strong>BPM</strong> <a class="statValue" id="bpmOut"></a>
         </div>
         <div class="key">
-          <strong>KEY</strong> <a id="keyOut">C</a>
+          <strong>KEY</strong> <a class="statValue" id="keyOut"></a>
         </div>
-      
-
       </footer>
-    </article>
-
-    <div id="editor"></div>
-    <button id="cmd">generate PDF</button>
-</div>    
+      </div>
+    </div>
+  </div>    
+</article>
 <!--_______________________________________________ -->
 
 
 
+<!--Backside-->
+<article class="cardBack" id="content">
 
+  <!--QR Code-->
+      <div class="qrcode" id="qrcode">
+      </div>     
+      <div class="company">To print your own tracks, email a Soundcloud link to: <br> WolfgangSvenS@gmail.com
+      </div>
+</article>
+</div>
 
 
 
 <!-- Javascript --->
 <script>
 
-//Avatar File Input/Output - 8/5/19 Not Working
+//Avatar File Input/Output - 9/23/19: Non-Square Images will deform the avatar's circle
 
 var avatarIn = document.getElementById("avatarIn");
 var avatarOut = document.getElementById("avatarOut");
@@ -210,10 +239,6 @@ function changeImage(input) {
   }
 }
 
-
-// var fileTag = document.getElementById("avatarIn");
-//    preview = document.getElementById("avatarOut");
-
 //Base, Border, and Font Color Inputs/Outputs
 
 const inputs = document.querySelectorAll('.builder input');
@@ -236,15 +261,6 @@ function getValue() {
   var c = document.getElementById('userIn').value;
   var d = document.getElementById('userOut');
   d.innerHTML=c;
-  /*
-  var e = document.getElementById('avatarIn').value;
-  var f = document.getElementById('avatarOut');
-  f.innerHTML= `<img src="${e}">`;
-  
-  var g = document.getElementById('artworkIn').value;
-  var h = document.getElementById('artworkOut');
-  h.innerHTML= `<img src="${g}">`;
-  */
 
   var i = document.getElementById('genreIn').value;
   var j = document.getElementById('genreOut');
@@ -266,41 +282,54 @@ function getValue() {
   var keyOut = document.getElementById('keyOut');
   keyOut.innerHTML=keyIn;
 }
-
-//Print Function - 8/5/19 Doesn't work
-
-var doc = new jsPDF();
-var specialElementHandlers = {
-    '#editor': function (element, renderer) {
-        return true;
-    }
-};
-
-$('#cmd').click(function () {
-    doc.fromHTML($('#content').html(), 15, 15, {
-        'width': 170,
-            'elementHandlers': specialElementHandlers
-    });
-    doc.save('sample-file.pdf');
-});
-
 </script>
 
-<!--
-<script src="https://connect.soundcloud.com/sdk/sdk-3.3.2.js"></script>
+<!--QR Code-->
+
 <script>
-  SC.initialize({
-    client_id: 'YOUR_CLIENT_ID',
-    redirect_uri: 'http://example.com/callback'
+     var border = document.getElementById('border');
+  var borderColor = border.value;
+ var qrcode = new QRCode("qrcode", {
+    colorDark : borderColor,
+    
   });
 
-  SC.get("/tracks", function (response) {
-    for (var i = 0; i < response.length; i++) {
-      $("ul").append("<li>" + response[i].title + "</li>");
-    }
+  $(border).on('change', function() {
+  borderColor = border.value;
+  $('#qrcode').html('');
+    qrcode = new QRCode("qrcode", {
+    colorDark : borderColor,
+    
   });
-</script>
---->
+  makeCode();
+ })
+
+function makeCode () {      
+  var elText = document.getElementById("qrCodeLink");
+  
+  if (!elText.value) {
+      alert("Input a text");
+      elText.focus();
+      return;
+  }
+  
+  qrcode.makeCode(elText.value);
+}
+makeCode();
+
+
+$("#qrCodeLink").
+  on("blur", function () {
+      makeCode();
+  }).
+  on("keydown", function (e) {
+      if (e.keyCode == 13) {
+          makeCode();
+      }
+  });
+  </script>
+
+<!--Current Attempt to implement jsPDF - 9/23/2019 Not Working-->
 
   </body>
 </html>
